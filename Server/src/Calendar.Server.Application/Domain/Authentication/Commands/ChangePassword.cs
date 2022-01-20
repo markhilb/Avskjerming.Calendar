@@ -14,12 +14,15 @@ namespace Calendar.Server.Application.Domain.Authentication.Commands
 
     public class ChangePasswordHandler : BaseHandler, IRequestHandler<ChangePasswordCommand, bool>
     {
-        public ChangePasswordHandler(ISqlSettings settings) : base(settings) { }
+        protected readonly IMediator _mediator;
+
+        public ChangePasswordHandler(ISqlSettings settings, IMediator mediator) : base(settings) =>
+            _mediator = mediator;
 
         public async Task<bool> Handle(ChangePasswordCommand command, CancellationToken cancellationToken)
         {
-            var hash = await _db.QuerySingleAsync<string>("SELECT Hash FROM Password");
-            if (hash != ComputeSHA256Hash(command.ChangePasswordDto.OldPassword))
+            var ok = await _mediator.Send(new LoginCommand { LoginDto = new LoginDto { Password = command.ChangePasswordDto.OldPassword } }, cancellationToken);
+            if (!ok)
                 return false;
 
             var updatedRows = await _db.ExecuteAsync("UPDATE Password SET Hash = @Hash", new { Hash = ComputeSHA256Hash(command.ChangePasswordDto.NewPassword) });

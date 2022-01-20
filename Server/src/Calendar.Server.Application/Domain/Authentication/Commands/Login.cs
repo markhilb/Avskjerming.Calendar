@@ -16,10 +16,7 @@ namespace Calendar.Server.Application.Domain.Authentication.Commands
     {
         public LoginHandler(ISqlSettings settings) : base(settings) { }
 
-        public async Task<bool> Handle(LoginCommand command, CancellationToken cancellationToken)
-        {
-            var hash = await _db.QuerySingleAsync<string>("SELECT Hash FROM Password");
-            return hash == ComputeSHA256Hash(command.LoginDto.Password);
-        }
+        public Task<bool> Handle(LoginCommand command, CancellationToken cancellationToken) =>
+            _db.QuerySingleAsync<bool>("SELECT COUNT(*) FROM Password WHERE Hash = @Hash", new { Hash = ComputeSHA256Hash(command.LoginDto.Password) });
     }
 }
