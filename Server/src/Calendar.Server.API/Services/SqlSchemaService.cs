@@ -21,7 +21,7 @@ namespace Calendar.Server.API.Services
                             FROM sys.tables
                             WHERE name = 'Teams'
                         ) CREATE TABLE Teams (
-                            Id INT NOT NULL IDENTITY PRIMARY KEY,
+                            Id BIGINT NOT NULL IDENTITY PRIMARY KEY,
                             Name VARCHAR(255),
                             PrimaryColor VARCHAR(9),
                             SecondaryColor VARCHAR(9),
@@ -33,7 +33,7 @@ namespace Calendar.Server.API.Services
                             FROM sys.tables
                             WHERE name = 'Employees'
                         ) CREATE TABLE Employees (
-                            Id INT NOT NULL IDENTITY PRIMARY KEY,
+                            Id BIGINT NOT NULL IDENTITY PRIMARY KEY,
                             Name VARCHAR(255),
                             Color VARCHAR(9),
                             Disabled BIT DEFAULT 0
@@ -44,12 +44,12 @@ namespace Calendar.Server.API.Services
                             FROM sys.tables
                             WHERE name = 'Events'
                         ) CREATE TABLE Events (
-                            Id INT NOT NULL IDENTITY PRIMARY KEY,
+                            Id BIGINT NOT NULL IDENTITY PRIMARY KEY,
                             Title VARCHAR(255),
                             Details VARCHAR(255),
                             Start DATETIME2,
                             ""End"" DATETIME2,
-                            TeamId INT NULL FOREIGN KEY (TeamId) REFERENCES Teams(Id),
+                            TeamId BIGINT NULL FOREIGN KEY (TeamId) REFERENCES Teams(Id),
                         );
 
                         IF NOT EXISTS (
@@ -57,9 +57,9 @@ namespace Calendar.Server.API.Services
                             FROM sys.tables
                             WHERE name = 'EventEmployees'
                         ) CREATE TABLE EventEmployees (
-                            Id INT NOT NULL IDENTITY PRIMARY KEY,
-                            EventId INT FOREIGN KEY (EventId) REFERENCES Events(Id),
-                            EmployeeId INT FOREIGN KEY (EmployeeId) REFERENCES Employees(Id),
+                            Id BIGINT NOT NULL IDENTITY PRIMARY KEY,
+                            EventId BIGINT FOREIGN KEY (EventId) REFERENCES Events(Id),
+                            EmployeeId BIGINT FOREIGN KEY (EmployeeId) REFERENCES Employees(Id),
                         );
 
                         IF NOT EXISTS (
@@ -67,7 +67,7 @@ namespace Calendar.Server.API.Services
                             FROM sys.tables
                             WHERE name = 'Password'
                         ) CREATE TABLE Password (
-                            Id INT NOT NULL IDENTITY PRIMARY KEY,
+                            Id BIGINT NOT NULL IDENTITY PRIMARY KEY,
                             Hash VARCHAR(256) NOT NULL,
                         );
 
