@@ -25,7 +25,7 @@ services:
     image: mcr.microsoft.com/mssql/server:2019-latest
     user: root
     environment:
-      SA_PASSWORD: "1234abcd<>%&"
+      SA_PASSWORD: $DATABASE_PASSWORD
       ACCEPT_EULA: "Y"
     volumes:
       - ./db:/var/opt/mssql/data
