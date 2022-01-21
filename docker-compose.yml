@@ -4,6 +4,7 @@ services:
     build:
       context: frontend
       dockerfile: .docker/Dockerfile
+    restart: always
     ports:
       - "12000:80"
 
@@ -11,6 +12,7 @@ services:
     build:
       context: Server
       dockerfile: .docker/Dockerfile
+    restart: always
     volumes:
       - type: bind
         source: /etc/letsencrypt/live/calendar.hilbertsen.com
@@ -23,6 +25,7 @@ services:
 
   db:
     image: mcr.microsoft.com/mssql/server:2019-latest
+    restart: always
     user: root
     environment:
       SA_PASSWORD: $DATABASE_PASSWORD
