@@ -1,3 +1,7 @@
+# sudo crontab -e
+# Every day at 04:00
+# 0 4 * * * /home/markus/Documents/Avskjerming/Avskjerming.Calendar/backup.sh
+
 USB_DIR="/home/markus/Documents/Avskjerming/Avskjerming.Calendar/usb"
 BACKUPS_DIR="$USB_DIR/backups"
 
