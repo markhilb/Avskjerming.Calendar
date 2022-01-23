@@ -7,12 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Calendar.Server.Application.Domain.Employee.Commands;
 using Calendar.Server.Application.Domain.Employee.Queries;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Calendar.Server.API.Controllers
 {
     [ApiController]
-    [Authorize]
+    // [Authorize]
     [Route("Employees")]
     public class EmployeeController : BaseController
     {

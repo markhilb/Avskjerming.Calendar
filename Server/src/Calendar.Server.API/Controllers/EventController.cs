@@ -8,12 +8,11 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Calendar.Server.API.Controllers
 {
     [ApiController]
-    [Authorize]
+    // [Authorize]
     [Route("Events")]
     public class EventController : BaseController
     {

@@ -7,12 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Calendar.Server.Application.Domain.Team.Commands;
 using Calendar.Server.Application.Domain.Team.Queries;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Calendar.Server.API.Controllers
 {
     [ApiController]
-    [Authorize]
+    // [Authorize]
     [Route("Teams")]
     public class TeamController : BaseController
     {
