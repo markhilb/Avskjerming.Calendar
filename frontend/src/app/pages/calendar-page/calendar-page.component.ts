@@ -93,7 +93,7 @@ export class CalendarPageComponent {
 
   constructor(private store: Store<AppState>, private modal: NgbModal) {
     this.fetchEvents();
-    interval(1000 * 60 * 5)
+    interval(1000 * 60)
       .pipe(untilDestroyed(this))
       .subscribe(() => this.fetchEvents());
 
