@@ -13,6 +13,8 @@ services:
       context: Server
       dockerfile: .docker/Dockerfile
     restart: always
+    environment:
+      DATABASE_PASSWORD: $DATABASE_PASSWORD
     volumes:
       - type: bind
         source: /etc/letsencrypt/live/calendar.hilbertsen.com
