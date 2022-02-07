@@ -102,7 +102,7 @@ export class CalendarPageComponent {
     store.dispatch(getTeams());
     store.dispatch(getEmployees());
 
-    interval(5000 * 60 * 60)
+    interval(1000 * 60 * 60)
       .pipe(untilDestroyed(this))
       .subscribe(() => {
         if (!isSameWeek(new Date(), this.currentWeek)) {
