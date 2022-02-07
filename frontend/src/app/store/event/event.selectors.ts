@@ -6,10 +6,10 @@ export const selectEventState = createSelector(selectAppState, (state) => state.
 export const selectEvents = createSelector(selectEventState, (state) => state.events);
 
 export const selectEventDayStart = createSelector(selectEvents, (state) =>
-  Math.min(...state.map((e) => e.start.getHours())),
+  Math.min(...state.map((e) => e.start.getHours()), 7),
 );
 export const selectEventDayEnd = createSelector(selectEvents, (state) =>
-  Math.max(...state.map((e) => e.start.getHours())),
+  Math.max(...state.map((e) => e.end.getHours()), 22),
 );
 
 export const selectCalendarEvents = createSelector(selectEvents, (state) =>
