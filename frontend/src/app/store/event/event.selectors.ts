@@ -5,16 +5,12 @@ export const selectEventState = createSelector(selectAppState, (state) => state.
 
 export const selectEvents = createSelector(selectEventState, (state) => state.events);
 
-// const serializeEvent = (event: CalendarEvent<MetaData>): EventDto => ({
-//   id: event.meta?.id ?? 0,
-//   title: event.title,
-//   details: event.meta?.details ?? '',
-//   start: event.start,
-//   end: event.end ?? event.start,
-//   teamId: event.meta?.team.id ?? 0,
-//   team: event.meta?.team ?? ({ id: 0 } as TeamDto),
-//   employees: event.meta?.employees ?? [],
-// });
+export const selectEventDayStart = createSelector(selectEvents, (state) =>
+  Math.min(...state.map((e) => e.start.getHours())),
+);
+export const selectEventDayEnd = createSelector(selectEvents, (state) =>
+  Math.max(...state.map((e) => e.start.getHours())),
+);
 
 export const selectCalendarEvents = createSelector(selectEvents, (state) =>
   state.map((event) => ({

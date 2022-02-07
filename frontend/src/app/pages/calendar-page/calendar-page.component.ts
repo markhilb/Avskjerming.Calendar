@@ -12,6 +12,8 @@ import {
   selectAvailableEmployees,
   selectCalendarEvents,
   selectEmployees,
+  selectEventDayEnd,
+  selectEventDayStart,
   updateEvent,
 } from 'src/app/store';
 import { Store } from '@ngrx/store';
@@ -68,8 +70,8 @@ export class CalendarPageComponent {
   @ViewChild('previous', { static: false }) previous?: ElementRef;
   @ViewChild('today', { static: false }) today?: ElementRef;
 
-  dayStart = 7;
-  dayEnd = 22;
+  dayStart$ = this.store.select(selectEventDayStart);
+  dayEnd$ = this.store.select(selectEventDayEnd);
   excludeDays = [0, 6];
 
   CalendarView = CalendarView;
