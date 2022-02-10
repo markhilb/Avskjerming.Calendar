@@ -5,6 +5,11 @@ services:
       context: frontend
       dockerfile: .docker/Dockerfile
     restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "10"
+        max-size: "10m"
     ports:
       - "12000:80"
 
@@ -22,6 +27,11 @@ services:
       - type: bind
         source: /etc/letsencrypt/archive/calendar.hilbertsen.com
         target: /https/archive/calendar.hilbertsen.com
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "10"
+        max-size: "10m"
     ports:
       - "5200:5100"
 
@@ -34,6 +44,11 @@ services:
       ACCEPT_EULA: "Y"
     volumes:
       - ./db:/var/opt/mssql/data
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "10"
+        max-size: "10m"
 
 
 networks:
