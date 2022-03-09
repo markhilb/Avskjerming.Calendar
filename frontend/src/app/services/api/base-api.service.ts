@@ -3,6 +3,12 @@ import { Injectable } from '@angular/core';
 import { catchError, map, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
+interface Response<T> {
+  success: boolean;
+  result: T;
+  error: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -29,10 +35,13 @@ export class BaseApiService {
       withCredentials: true,
     };
 
-    return this.httpClient.request<T>(method, environment.baseApi + url, httpOptions).pipe(
-      map((response: T) => this.parseResponse<T>(response)),
+    return this.httpClient.request<Response<T>>(method, environment.baseApi + url, httpOptions).pipe(
       catchError((error: HttpErrorResponse) => {
         throw new Error(error.status === 400 ? 'En uforventet feil har oppstått' : 'Fikk ikke kontakt med serveren');
+      }),
+      map((response: Response<T>) => {
+        if (response.success) return this.parseResponse<T>(response.result);
+        throw new Error('En uforventet feil har oppstått');
       }),
     );
   }
@@ -59,19 +68,11 @@ export class BaseApiService {
         if (value instanceof Object) {
           this.parseResponse(value);
         } else if (typeof value === 'string' && this.dateRegex.test(value)) {
-          (response as any)[key] = this.utcToLocale(new Date(value));
+          (response as any)[key] = new Date(value);
         }
       }
     }
 
     return response;
-  }
-
-  utcToLocale(date: Date) {
-    var newDate = new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
-    var offset = date.getTimezoneOffset() / 60;
-    var hours = date.getHours();
-    newDate.setHours(hours - offset);
-    return newDate;
   }
 }

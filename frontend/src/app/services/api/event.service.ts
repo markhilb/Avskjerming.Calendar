@@ -9,11 +9,11 @@ import { EventDto } from 'src/app/models/event.model';
 export class EventService {
   constructor(private api: BaseApiService) {}
 
-  getEvents = (from: Date, to: Date): Observable<EventDto[]> => this.api.get<EventDto[]>('Events', { from, to });
+  getEvents = (from: Date, to: Date): Observable<EventDto[]> => this.api.get<EventDto[]>('events', { from, to });
 
-  createEvent = (event: EventDto): Observable<number> => this.api.post<number>('Events', event);
+  createEvent = (event: EventDto): Observable<number> => this.api.post<number>('events', event);
 
-  updateEvent = (event: EventDto): Observable<boolean> => this.api.put<boolean>('Events', {}, event);
+  updateEvent = (event: EventDto): Observable<boolean> => this.api.put<boolean>('events', {}, event);
 
-  deleteEvent = (id: number): Observable<boolean> => this.api.delete<boolean>('Events/' + id);
+  deleteEvent = (id: number): Observable<boolean> => this.api.delete<boolean>('events/' + id);
 }

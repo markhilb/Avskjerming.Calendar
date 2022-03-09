@@ -4,7 +4,6 @@ export interface EventDto {
   details: string;
   start: Date;
   end: Date;
-  teamId: number | null;
   team: TeamDto | null;
   employees: EmployeeDto[];
 }

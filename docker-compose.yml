@@ -15,7 +15,7 @@ services:
 
   server:
     build:
-      context: Server
+      context: server
       dockerfile: .docker/Dockerfile
     restart: always
     environment:
@@ -33,22 +33,24 @@ services:
         max-file: "10"
         max-size: "10m"
     ports:
-      - "5200:5100"
+      - "5200:5200"
 
   db:
-    image: mcr.microsoft.com/mssql/server:2019-latest
+    image: postgres:latest
     restart: always
-    user: root
     environment:
-      SA_PASSWORD: $DATABASE_PASSWORD
-      ACCEPT_EULA: "Y"
+      POSTGRES_DB: master
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: $DATABASE_PASSWORD
     volumes:
-      - ./db:/var/opt/mssql/data
+      - ./db:/var/lib/postgresql/data
     logging:
       driver: "json-file"
       options:
         max-file: "10"
         max-size: "10m"
+    # ports:
+    #   - '5432:5432'
 
 
 networks:

@@ -9,11 +9,11 @@ import { BaseApiService } from './base-api.service';
 export class TeamService {
   constructor(private api: BaseApiService) {}
 
-  getTeams = (): Observable<TeamDto[]> => this.api.get<TeamDto[]>('Teams');
+  getTeams = (): Observable<TeamDto[]> => this.api.get<TeamDto[]>('teams');
 
-  createTeam = (event: TeamDto): Observable<number> => this.api.post<number>('Teams', event);
+  createTeam = (event: TeamDto): Observable<number> => this.api.post<number>('teams', event);
 
-  updateTeam = (event: TeamDto): Observable<boolean> => this.api.put<boolean>('Teams', {}, event);
+  updateTeam = (event: TeamDto): Observable<boolean> => this.api.put<boolean>('teams', {}, event);
 
-  deleteTeam = (id: number): Observable<boolean> => this.api.delete<boolean>('Teams/' + id);
+  deleteTeam = (id: number): Observable<boolean> => this.api.delete<boolean>('teams/' + id);
 }

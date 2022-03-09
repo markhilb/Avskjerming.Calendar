@@ -34,7 +34,6 @@ const serializeEvent = (event: CalendarEvent<MetaData>): EventDto => ({
   details: event.meta?.details ?? '',
   start: event.start,
   end: event.end ?? event.start,
-  teamId: event.meta?.team?.id ?? null,
   team: event.meta?.team ?? null,
   employees: event.meta?.employees ?? [],
 });

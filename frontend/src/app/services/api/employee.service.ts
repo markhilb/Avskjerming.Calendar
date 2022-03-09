@@ -9,11 +9,11 @@ import { BaseApiService } from './base-api.service';
 export class EmployeeService {
   constructor(private api: BaseApiService) {}
 
-  getEmployees = (): Observable<EmployeeDto[]> => this.api.get<EmployeeDto[]>('Employees');
+  getEmployees = (): Observable<EmployeeDto[]> => this.api.get<EmployeeDto[]>('employees');
 
-  createEmployee = (event: EmployeeDto): Observable<number> => this.api.post<number>('Employees', event);
+  createEmployee = (event: EmployeeDto): Observable<number> => this.api.post<number>('employees', event);
 
-  updateEmployee = (event: EmployeeDto): Observable<boolean> => this.api.put<boolean>('Employees', {}, event);
+  updateEmployee = (event: EmployeeDto): Observable<boolean> => this.api.put<boolean>('employees', {}, event);
 
-  deleteEmployee = (id: number): Observable<boolean> => this.api.delete<boolean>('Employees/' + id);
+  deleteEmployee = (id: number): Observable<boolean> => this.api.delete<boolean>('employees/' + id);
 }
