@@ -1,8 +1,11 @@
 FROM node:16 AS builder
 
 WORKDIR /app
-COPY . .
+
+COPY package*.json ./
 RUN npm ci
+
+COPY . .
 RUN npm run build --prod
 
 FROM nginx:alpine
