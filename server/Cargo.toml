@@ -9,5 +9,7 @@ edition = "2021"
 application = { path = "./application"}
 actix-web = { version = "4.0.0-rc.1", features = ["openssl"] }
 actix-cors = "0.6"
+actix-session = "0.5"
 openssl = { version = "0.10", features = ["vendored"] }
 serde = "1.0.136"
+futures-util = "0.3"

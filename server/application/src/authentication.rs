@@ -29,16 +29,16 @@ impl Database {
         }
     }
 
-    pub async fn change_password(db: &Database, form: ChangePassword) -> Result<(), String> {
+    pub async fn change_password(db: &Database, form: ChangePassword) -> Result<bool, String> {
         if Database::authenticate(db, form.old).await? {
             match sqlx::query("UPDATE password SET hash = $1")
-                .bind(form.new)
+                .bind(sha256::digest(form.new))
                 .execute(&db.pool)
                 .await
             {
                 Ok(res) => {
                     if res.rows_affected() == 1 {
-                        Ok(())
+                        Ok(true)
                     } else {
                         Err("Could not change password".into())
                     }
@@ -49,7 +49,7 @@ impl Database {
                 }
             }
         } else {
-            Err("Incorrect password".into())
+            Ok(false)
         }
     }
 }

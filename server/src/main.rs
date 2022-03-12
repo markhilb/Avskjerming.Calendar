@@ -1,5 +1,10 @@
+use std::env;
+
 use actix_cors::Cors;
-use actix_web::{delete, get, post, put, web, App, HttpResponse, HttpServer, Responder, Result};
+use actix_session::{CookieSession, Session};
+use actix_web::{
+    cookie::SameSite, delete, get, post, put, web, App, HttpServer, Responder, Result,
+};
 
 use application::{
     authentication::{ChangePassword, Login},
@@ -10,48 +15,14 @@ use application::{
     team::Team,
 };
 use openssl::ssl::{SslAcceptor, SslAcceptorBuilder, SslFiletype, SslMethod};
-use serde::Serialize;
 
-macro_rules! response {
-    ($res:expr) => {
-        Ok(match $res {
-            Ok(res) => web::Json(Response::success(res)),
-            Err(e) => web::Json(Response::error(e)),
-        })
-    };
-}
+mod auth;
+mod response;
 
-#[derive(Serialize)]
-struct Response<T> {
-    success: bool,
-    result: Option<T>,
-    error: Option<String>,
-}
+use crate::auth::AuthGuard;
+use crate::response::Response;
 
-impl<T> Response<T> {
-    pub fn success(result: T) -> Self {
-        Response {
-            success: true,
-            result: Some(result),
-            error: None,
-        }
-    }
-
-    pub fn error(error: String) -> Self {
-        Response {
-            success: false,
-            result: None,
-            error: Some(error),
-        }
-    }
-}
-
-#[get("/")]
-async fn hello() -> impl Responder {
-    HttpResponse::Ok().body("Hello world!")
-}
-
-#[get("events")]
+#[get("events", wrap = "AuthGuard")]
 async fn get_events(
     db: web::Data<Database>,
     query: web::Query<DateRange>,
@@ -59,47 +30,47 @@ async fn get_events(
     response!(Database::get_events(&db, query.into_inner()).await)
 }
 
-#[post("events")]
+#[post("events", wrap = "AuthGuard")]
 async fn create_event(db: web::Data<Database>, event: web::Json<Event>) -> Result<impl Responder> {
     response!(Database::create_event(&db, event.into_inner()).await)
 }
 
-#[put("events")]
+#[put("events", wrap = "AuthGuard")]
 async fn update_event(db: web::Data<Database>, event: web::Json<Event>) -> Result<impl Responder> {
     response!(Database::update_event(&db, event.into_inner()).await)
 }
 
-#[delete("events/{id}")]
+#[delete("events/{id}", wrap = "AuthGuard")]
 async fn delete_event(db: web::Data<Database>, path: web::Path<i64>) -> Result<impl Responder> {
     response!(Database::delete_event(&db, path.into_inner()).await)
 }
 
-#[get("teams")]
+#[get("teams", wrap = "AuthGuard")]
 async fn get_teams(db: web::Data<Database>) -> Result<impl Responder> {
     response!(Database::get_teams(&db).await)
 }
 
-#[post("teams")]
+#[post("teams", wrap = "AuthGuard")]
 async fn create_team(db: web::Data<Database>, team: web::Json<Team>) -> Result<impl Responder> {
     response!(Database::create_team(&db, team.into_inner()).await)
 }
 
-#[put("teams")]
+#[put("teams", wrap = "AuthGuard")]
 async fn update_team(db: web::Data<Database>, team: web::Json<Team>) -> Result<impl Responder> {
     response!(Database::update_team(&db, team.into_inner()).await)
 }
 
-#[delete("teams/{id}")]
+#[delete("teams/{id}", wrap = "AuthGuard")]
 async fn delete_team(db: web::Data<Database>, path: web::Path<i64>) -> Result<impl Responder> {
     response!(Database::delete_team(&db, path.into_inner()).await)
 }
 
-#[get("employees")]
+#[get("employees", wrap = "AuthGuard")]
 async fn get_employees(db: web::Data<Database>) -> Result<impl Responder> {
     response!(Database::get_employees(&db).await)
 }
 
-#[post("employees")]
+#[post("employees", wrap = "AuthGuard")]
 async fn create_employee(
     db: web::Data<Database>,
     employee: web::Json<Employee>,
@@ -107,7 +78,7 @@ async fn create_employee(
     response!(Database::create_employee(&db, employee.into_inner()).await)
 }
 
-#[put("employees")]
+#[put("employees", wrap = "AuthGuard")]
 async fn update_employee(
     db: web::Data<Database>,
     employee: web::Json<Employee>,
@@ -115,17 +86,64 @@ async fn update_employee(
     response!(Database::update_employee(&db, employee.into_inner()).await)
 }
 
-#[delete("employees/{id}")]
+#[delete("employees/{id}", wrap = "AuthGuard")]
 async fn delete_employee(db: web::Data<Database>, path: web::Path<i64>) -> Result<impl Responder> {
     response!(Database::delete_employee(&db, path.into_inner()).await)
 }
 
-#[post("authentication/login")]
-async fn login(db: web::Data<Database>, form: web::Json<Login>) -> Result<impl Responder> {
-    response!(Database::authenticate(&db, form.into_inner().password).await)
+#[post("login")]
+async fn login(
+    db: web::Data<Database>,
+    form: web::Json<Login>,
+    session: Session,
+) -> Result<impl Responder> {
+    response!(
+        match Database::authenticate(&db, form.into_inner().password).await {
+            Ok(res) => {
+                if res {
+                    match session.insert("logged_in", true) {
+                        Ok(()) => Ok(true),
+                        Err(e) => {
+                            println!("Error: {}", e);
+                            Err("An error occured during authentication".into())
+                        }
+                    }
+                } else {
+                    Ok(false)
+                }
+            }
+            Err(e) => {
+                println!("Error: {}", e);
+                Err("An error occured during authentication".into())
+            }
+        }
+    )
 }
 
-#[put("authentication/change_password")]
+#[get("logged_in")]
+async fn logged_in(session: Session) -> Result<impl Responder> {
+    response!(match session.get::<bool>("logged_in") {
+        Ok(val) => match val {
+            Some(res) => Ok(res),
+            None => {
+                println!("None");
+                Ok(false)
+            }
+        },
+        Err(e) => {
+            println!("Error: {}", e);
+            Ok(false)
+        }
+    })
+}
+
+#[post("logout")]
+async fn logout(session: Session) -> Result<impl Responder> {
+    session.clear();
+    response!(Ok(()))
+}
+
+#[post("change_password", wrap = "AuthGuard")]
 async fn change_password(
     db: web::Data<Database>,
     form: web::Json<ChangePassword>,
@@ -171,12 +189,25 @@ async fn main() -> std::io::Result<()> {
                     .allow_any_header()
                     .allow_any_method()
                     .allowed_origin(if cfg!(debug_assertions) {
-                        "http://localhost:4200"
+                        "http://129.242.219.121:4200"
                     } else {
                         "https://calendar.hilbertsen.com"
                     }),
             )
-            .service(hello)
+            .wrap(
+                CookieSession::private(
+                    env::var("SERVER_SECRET")
+                        .expect("Missing enviroment variable: SERVER_SECRET")
+                        .as_bytes(),
+                )
+                .secure(!cfg!(debug_assertions))
+                .http_only(true)
+                .same_site(if cfg!(debug_assertions) {
+                    SameSite::Lax
+                } else {
+                    SameSite::Strict
+                }),
+            )
             .service(get_events)
             .service(create_event)
             .service(update_event)
@@ -190,6 +221,8 @@ async fn main() -> std::io::Result<()> {
             .service(update_employee)
             .service(delete_employee)
             .service(login)
+            .service(logged_in)
+            .service(logout)
             .service(change_password)
     });
 
