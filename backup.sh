@@ -16,8 +16,8 @@ fi
 [ ! -d "$BACKUPS_DIR" ] && mkdir "$BACKUPS_DIR"
 
 # Copy db to hard drive
-NAME=$BACKUPS_DIR/db_$(date +'%Y-%m-%dT%H-%M-%S')
-sudo cp -r /home/avskjerming/Documents/Avskjerming.Calendar/db "$NAME"
+NAME=$BACKUPS_DIR/db_$(date +'%Y-%m-%dT%H-%M-%S').zip
+sudo zip -r $NAME /home/avskjerming/Documents/Avskjerming.Calendar/db
 
 # Only keep 10 latest backups
 # if [[ $(ls $BACKUPS_DIR | wc -l) -gt 10 ]]; then
