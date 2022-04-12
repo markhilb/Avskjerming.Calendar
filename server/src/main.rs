@@ -202,6 +202,7 @@ async fn main() -> std::io::Result<()> {
                 )
                 .secure(!cfg!(debug_assertions))
                 .http_only(true)
+                .max_age(i64::MAX)
                 .same_site(if cfg!(debug_assertions) {
                     SameSite::Lax
                 } else {
