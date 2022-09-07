@@ -1,10 +1,9 @@
-use std::env;
-
 use actix_cors::Cors;
 use actix_session::{CookieSession, Session};
 use actix_web::{
     cookie::SameSite, delete, get, post, put, web, App, HttpServer, Responder, Result,
 };
+use std::env;
 
 use application::{
     authentication::{ChangePassword, Login},
@@ -14,7 +13,6 @@ use application::{
     logger,
     team::Team,
 };
-use openssl::ssl::{SslAcceptor, SslAcceptorBuilder, SslFiletype, SslMethod};
 
 mod auth;
 mod response;
@@ -151,20 +149,6 @@ async fn change_password(
     response!(Database::change_password(&db, form.into_inner()).await)
 }
 
-fn get_ssl_builder() -> SslAcceptorBuilder {
-    let mut builder = SslAcceptor::mozilla_intermediate(SslMethod::tls()).unwrap();
-    builder
-        .set_private_key_file(
-            "/https/live/calendar.hilbertsen.com/privkey.pem",
-            SslFiletype::PEM,
-        )
-        .expect("Could not find privkey.pem");
-    builder
-        .set_certificate_chain_file("/https/live/calendar.hilbertsen.com/fullchain.pem")
-        .expect("Could not find fullchain.pem");
-    builder
-}
-
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     logger::init().expect("Could not init logger");
@@ -180,7 +164,7 @@ async fn main() -> std::io::Result<()> {
         .await
         .expect("Could not create schema");
 
-    let server = HttpServer::new(move || {
+    HttpServer::new(move || {
         App::new()
             .app_data(web::Data::new(db.clone()))
             .wrap(
@@ -225,13 +209,11 @@ async fn main() -> std::io::Result<()> {
             .service(logged_in)
             .service(logout)
             .service(change_password)
-    });
-
-    if cfg!(debug_assertions) {
-        server.bind("0.0.0.0:5200")?
-    } else {
-        server.bind_openssl("0.0.0.0:5200", get_ssl_builder())?
-    }
+    })
+    .bind(format!(
+        "0.0.0.0:{}",
+        if cfg!(debug_assertions) { "5200" } else { "80" }
+    ))?
     .run()
     .await
 }
