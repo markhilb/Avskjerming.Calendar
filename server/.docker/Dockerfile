@@ -22,6 +22,6 @@ RUN touch -am application/src/lib.rs src/main.rs
 RUN cargo build --release
 
 
-FROM scratch
+FROM gcr.io/distroless/cc
 COPY --from=builder /app/target/release/server .
 CMD ["./server"]

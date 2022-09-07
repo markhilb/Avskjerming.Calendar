@@ -1,7 +1,8 @@
 use actix_cors::Cors;
 use actix_session::{CookieSession, Session};
 use actix_web::{
-    cookie::SameSite, delete, get, post, put, web, App, HttpServer, Responder, Result,
+    cookie::SameSite, delete, get, middleware::Compress, post, put, web, App, HttpServer,
+    Responder, Result,
 };
 use std::env;
 
@@ -167,6 +168,7 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         App::new()
             .app_data(web::Data::new(db.clone()))
+            .wrap(Compress::default())
             .wrap(
                 Cors::default()
                     .supports_credentials()
