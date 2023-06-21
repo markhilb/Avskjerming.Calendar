@@ -1,0 +1,5 @@
+[workspace]
+members = ["api", "postgres"]
+
+[workspace.dependencies]
+error-stack = "0.3.1"

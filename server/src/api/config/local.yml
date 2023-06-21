@@ -1,0 +1,11 @@
+log_level: Debug
+api:
+  ip: 0.0.0.0 
+  port: 5000
+  secret_key: 0123456789_0123456789_0123456789
+postgres:
+  ip: postgres
+  port: 5432
+  username: postgres
+  password: test123
+  max_connections: 10

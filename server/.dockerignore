@@ -1,5 +1,4 @@
-**/target/
-rustfmt.toml
-.gitignore
-.docker/
-.dockerignore
+*
+!src
+!.docker
+**/target
