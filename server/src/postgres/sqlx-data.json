@@ -41,29 +41,22 @@
     },
     "query": "\nINSERT INTO\n    employees (\"name\", color)\nVALUES\n    ($1, $2)\nRETURNING\n    employee_id\n            "
   },
-  "1c6c97ced0e6f74ed35e2c3f7222de1c18516b2db8f84768a858330e90bad83c": {
+  "0f78e72b01b0df0898659e9d37d29681740d12f869aaef90a476516c58a3975a": {
     "describe": {
-      "columns": [
-        {
-          "name": "event_id",
-          "ordinal": 0,
-          "type_info": "Int8"
-        }
-      ],
-      "nullable": [
-        false
-      ],
+      "columns": [],
+      "nullable": [],
       "parameters": {
         "Left": [
           "Text",
           "Text",
           "Timestamptz",
           "Timestamptz",
+          "Int8",
           "Int8"
         ]
       }
     },
-    "query": "\nINSERT INTO\n    events (title, details, period, team_id)\nVALUES\n    ($1, $2, TSTZRANGE ($3, $4), $5)\nRETURNING\n    event_id\n            "
+    "query": "\nUPDATE events\nSET\n    title = $1,\n    details = $2,\n    period = TSTZRANGE ($3, $4, '[]'),\n    team_id = $5\nWHERE\n    event_id = $6\n            "
   },
   "1f6eea35697bc7e42013c6807ef7845b8c0f5418687e1c1a306c0b028d4de885": {
     "describe": {
@@ -113,23 +106,6 @@
       }
     },
     "query": "\nDELETE FROM events\nWHERE\n    event_id = $1\n            "
-  },
-  "6b4fd83d2baee9f040088f3e9a926c064b6f3743efcf003840f034ed9fee0045": {
-    "describe": {
-      "columns": [],
-      "nullable": [],
-      "parameters": {
-        "Left": [
-          "Text",
-          "Text",
-          "Timestamptz",
-          "Timestamptz",
-          "Int8",
-          "Int8"
-        ]
-      }
-    },
-    "query": "\nUPDATE events\nSET\n    title = $1,\n    details = $2,\n    period = TSTZRANGE ($3, $4),\n    team_id = $5\nWHERE\n    event_id = $6\n            "
   },
   "7d5da3d9a21ec37eec9a092ff85574e940cf2f58dd5e06efef9af8eabe62bf7c": {
     "describe": {
@@ -272,6 +248,30 @@
       }
     },
     "query": "\nSELECT\n    employee_id,\n    \"name\",\n    color,\n    disabled\nFROM\n    employees\n                     "
+  },
+  "c0ec5044be7e16b6806e7d565561fce8f7f41e30b0036241f047d9f5b0c11052": {
+    "describe": {
+      "columns": [
+        {
+          "name": "event_id",
+          "ordinal": 0,
+          "type_info": "Int8"
+        }
+      ],
+      "nullable": [
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Text",
+          "Text",
+          "Timestamptz",
+          "Timestamptz",
+          "Int8"
+        ]
+      }
+    },
+    "query": "\nINSERT INTO\n    events (title, details, period, team_id)\nVALUES\n    ($1, $2, TSTZRANGE ($3, $4, '[]'), $5)\nRETURNING\n    event_id\n            "
   },
   "d6fac7cc84ae4a33f0d16b4a2dfb8cea7c4e1f7c64af71320291bb25dc6cd37d": {
     "describe": {

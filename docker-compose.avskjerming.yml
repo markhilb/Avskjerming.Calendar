@@ -11,37 +11,23 @@ services:
   server:
     build:
       context: server
-      dockerfile: .docker/Dockerfile
+      dockerfile: .docker/api/Dockerfile
     environment:
-      - DATABASE_PASSWORD=test123
-      - APP_ENVIRONMENT=Local
+      - DATABASE_PASSWORD=$PGPASSWORD
+      - APP_ENVIRONMENT=Avskjerming
     ports:
       - 5000:5000
 
   postgres:
-    image: postgres:15
+    image: postgres:15-alpine
+    shm_size: 1g
     restart: always
     environment:
-      - POSTGRES_PASSWORD=test123
+      - DATABASE_PASSWORD=$PGPASSWORD
     volumes:
       - ./db:/var/lib/postgresql/data
     ports:
       - 5432:5432
-
-  postgres-test:
-    image: postgres:15
-    environment:
-      - POSTGRES_PASSWORD=test123
-    ports:
-      - 5433:5432
-
-  postgres-check:
-    image: postgres:15
-    environment:
-      - POSTGRES_PASSWORD=test123
-    ports:
-      - 5434:5432
-
 
 networks:
   default:

@@ -1,5 +1,0 @@
-**/target/
-rustfmt.toml
-.gitignore
-.docker/
-.dockerignore

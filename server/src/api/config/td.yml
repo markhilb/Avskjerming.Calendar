@@ -1,0 +1,9 @@
+log_level: Warning
+api:
+  ip: 0.0.0.0 
+  port: 80
+postgres:
+  ip: postgres
+  port: 5432
+  username: postgres
+  max_connections: 10
