@@ -1,7 +1,7 @@
-import { TeamDto } from 'src/app/models/event.model';
+import { Team } from 'src/generated/openapi';
 
 export interface TeamState {
-  teams: TeamDto[];
+  teams: Team[];
 }
 
 export const initialTeamState: TeamState = {

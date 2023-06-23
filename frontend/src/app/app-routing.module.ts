@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AnonymousGuard, AuthenticationGuard } from './guards/authentication.guard';
+import { anonGuard, authGuard } from './guards/auth.guard';
 import { CalendarPageComponent } from './pages/calendar-page/calendar-page.component';
-import { ChangePasswordComponent } from './pages/change-password/change-password.component';
+import { ChangePasswordPageComponent } from './pages/change-password-page/change-password-page.component';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { SettingsPageComponent } from './pages/settings-page/settings-page.component';
 
@@ -10,22 +10,22 @@ const routes: Routes = [
   {
     path: '',
     component: CalendarPageComponent,
-    canActivate: [AuthenticationGuard],
+    canActivate: [authGuard],
   },
   {
     path: 'login',
     component: LoginPageComponent,
-    canActivate: [AnonymousGuard],
+    canActivate: [anonGuard],
   },
   {
     path: 'instillinger',
     component: SettingsPageComponent,
-    canActivate: [AuthenticationGuard],
+    canActivate: [authGuard],
   },
   {
     path: 'passord',
-    component: ChangePasswordComponent,
-    canActivate: [AuthenticationGuard],
+    component: ChangePasswordPageComponent,
+    canActivate: [authGuard],
   },
 
   // Must be at the bottom

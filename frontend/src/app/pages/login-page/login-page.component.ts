@@ -4,6 +4,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ofType } from '@ngrx/effects';
 import { ActionsSubject, Store } from '@ngrx/store';
 import { AppState, login, loginFailed } from 'src/app/store';
+import { Login } from 'src/generated/openapi';
 
 @UntilDestroy()
 @Component({
@@ -25,10 +26,11 @@ export class LoginPageComponent {
   }
 
   login() {
-    if (!this.fg.valid) {
-      this.fg.markAllAsTouched();
+    console.log(this.fg.value, this.fg.valid);
+    if (this.fg.valid) {
+      this.store.dispatch(login({ login: this.fg.value as Login }));
     } else {
-      this.store.dispatch(login(this.fg.value));
+      this.fg.markAllAsTouched();
     }
   }
 }

@@ -2,10 +2,10 @@
   Passord
   <input
     id="password"
-    class="form-control"
-    [class.error]="!fg.controls['password'].valid && fg.controls['password'].touched"
     type="password"
+    class="form-control"
     formControlName="password"
+    [class.error]="fg.controls.password.touched && !fg.controls.password.valid"
   />
   <div *ngIf="loginFailed" class="error-message">Feil passord</div>
 

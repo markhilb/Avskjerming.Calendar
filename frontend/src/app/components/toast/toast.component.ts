@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { Toast } from 'src/app/models/toast.model';
-import { ToastService } from 'src/app/services/toast.service';
+import { ToastService, Toast } from 'src/app/services/toast.service';
 
 @UntilDestroy()
 @Component({

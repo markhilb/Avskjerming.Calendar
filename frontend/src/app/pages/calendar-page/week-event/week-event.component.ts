@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
 import { PlacementArray } from '@ng-bootstrap/ng-bootstrap/util/positioning';
-import { WeekViewAllDayEventResize } from 'angular-calendar/modules/week/calendar-week-view.component';
+import { WeekViewAllDayEventResize } from 'angular-calendar/modules/week/calendar-week-view/calendar-week-view.component';
 import { WeekViewHourColumn, WeekViewTimeEvent } from 'calendar-utils';
-import { EmployeeDto } from 'src/app/models/event.model';
+import { Employee } from 'src/generated/openapi';
 
 @Component({
   selector: 'app-week-event',
@@ -10,29 +10,29 @@ import { EmployeeDto } from 'src/app/models/event.model';
   styleUrls: ['./week-event.component.scss'],
 })
 export class WeekEventComponent {
-  @Input() locale: string;
+  @Input() locale?: string;
 
-  @Input() weekEvent: WeekViewAllDayEventResize | WeekViewTimeEvent;
+  @Input() weekEvent?: WeekViewAllDayEventResize | WeekViewTimeEvent;
 
-  @Input() tooltipPlacement: PlacementArray;
+  @Input() tooltipPlacement?: PlacementArray;
 
-  @Input() tooltipAppendToBody: boolean;
+  @Input() tooltipAppendToBody?: boolean;
 
-  @Input() tooltipDisabled: boolean;
+  @Input() tooltipDisabled?: boolean;
 
-  @Input() tooltipDelay: number | null;
+  @Input() tooltipDelay?: number | null;
 
-  @Input() customTemplate: TemplateRef<any>;
+  @Input() customTemplate?: TemplateRef<any>;
 
-  @Input() eventTitleTemplate: TemplateRef<any>;
+  @Input() eventTitleTemplate?: TemplateRef<any>;
 
-  @Input() eventActionsTemplate: TemplateRef<any>;
+  @Input() eventActionsTemplate!: TemplateRef<any>;
 
-  @Input() tooltipTemplate: TemplateRef<any>;
+  @Input() tooltipTemplate?: TemplateRef<any>;
 
-  @Input() column: WeekViewHourColumn;
+  @Input() column?: WeekViewHourColumn;
 
-  @Input() daysInWeek: number;
+  @Input() daysInWeek?: number;
 
   @Output() eventClicked = new EventEmitter<{
     sourceEvent: MouseEvent | KeyboardEvent;
@@ -45,7 +45,7 @@ export class WeekEventComponent {
     if (event.meta.details) content += `<div>${event.meta.details}</div>`;
 
     if (event.meta.employees?.length)
-      content += `<div>${event.meta.employees.map((e: EmployeeDto) => `<span>${e.name}</span>`)}</div>`;
+      content += `<div>${event.meta.employees.map((e: Employee) => `<span>${e.name}</span>`)}</div>`;
 
     return content;
   }

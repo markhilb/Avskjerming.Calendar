@@ -1,9 +1,13 @@
 import { createSelector } from '@ngrx/store';
-import { selectAppState } from '../app.reducers';
+import { AppState } from '../app.state';
 
-export const selectEventState = createSelector(selectAppState, (state) => state.eventState);
+const eventState = (state: AppState) => state.eventState;
 
-export const selectEvents = createSelector(selectEventState, (state) => state.events);
+export const _selectEvents = createSelector(eventState, (state) => state.events);
+
+export const selectEvents = createSelector(_selectEvents, (state) =>
+  state.map((e) => ({ ...e, start: new Date(e.start), end: new Date(e.end) })),
+);
 
 export const selectEventDayStart = createSelector(selectEvents, (state) =>
   Math.min(...state.map((e) => e.start.getHours()), 7),
@@ -26,10 +30,10 @@ export const selectCalendarEvents = createSelector(selectEvents, (state) =>
     },
     draggable: true,
     meta: {
+      id: event.id,
       details: event.details,
       team: event.team,
       employees: event.employees,
-      id: event.id,
     },
   })),
 );

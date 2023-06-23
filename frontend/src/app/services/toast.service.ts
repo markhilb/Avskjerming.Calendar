@@ -1,14 +1,28 @@
 import { Injectable } from '@angular/core';
 import { EMPTY, Subject } from 'rxjs';
-import { Toast, ToastType } from 'src/app/models/toast.model';
+
+export class Toast {
+  id: number;
+  type: ToastType;
+  message: string;
+
+  constructor(type: ToastType, message: string) {
+    this.id = new Date().getTime();
+    this.type = type;
+    this.message = message;
+  }
+}
+
+export enum ToastType {
+  Success = 'success',
+  Error = 'error',
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class ToastService {
   toast$: Subject<Toast> = new Subject<Toast>();
-
-  constructor() {}
 
   success(message: string) {
     this.toast$.next(new Toast(ToastType.Success, message));

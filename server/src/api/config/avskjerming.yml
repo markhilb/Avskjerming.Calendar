@@ -1,8 +1,7 @@
-log_level: Warning
+log_level: Warn
 api:
   ip: 0.0.0.0 
   port: 5000
-  secret_key: 0123456789_0123456789_0123456789
 postgres:
   ip: postgres
   port: 5432

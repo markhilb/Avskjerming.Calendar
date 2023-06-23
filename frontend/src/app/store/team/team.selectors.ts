@@ -1,6 +1,8 @@
 import { createSelector } from '@ngrx/store';
-import { selectAppState } from '../app.reducers';
+import { AppState } from '../app.state';
 
-export const selectTeamState = createSelector(selectAppState, (state) => state.teamState);
+const teamState = (state: AppState) => state.teamState;
 
-export const selectTeams = createSelector(selectTeamState, (state) => state.teams);
+export const selectTeams = createSelector(teamState, (state) => state.teams);
+
+export const selectTeamsMap = createSelector(selectTeams, (state) => Object.fromEntries(state.map((t) => [t.id, t])));

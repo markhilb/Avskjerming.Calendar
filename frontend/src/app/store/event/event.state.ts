@@ -1,7 +1,7 @@
-import { EventDto } from 'src/app/models/event.model';
+import { Event } from 'src/generated/openapi';
 
 export interface EventState {
-  events: EventDto[];
+  events: Event[];
 }
 
 export const initialEventState: EventState = {

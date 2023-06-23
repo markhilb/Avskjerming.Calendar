@@ -20,6 +20,7 @@ pub struct EventsQuery {
 #[utoipa::path(
     get,
     path = "/events",
+    params(EventsQuery),
     responses(
         (status = 200, description = "all events", body = [Event]),
         (status = 500, description = "an internal server error occured"),

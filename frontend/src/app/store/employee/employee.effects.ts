@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { EMPTY } from 'rxjs';
 import { catchError, exhaustMap, map, switchMap } from 'rxjs/operators';
-import { EmployeeService } from 'src/app/services/api/employee.service';
+import { EmployeeService } from 'src/app/services/employee.service';
 import * as A from './employee.actions';
 
 @Injectable()
@@ -24,7 +24,7 @@ export class EmployeeEffects {
       ofType(A.createEmployee),
       exhaustMap((action) =>
         this.employeeService.createEmployee(action.employee).pipe(
-          map((id) => A.createEmployeeOk({ employee: { ...action.employee, id } })),
+          map((id) => A.createEmployeeOk({ employee: { ...action.employee, id, disabled: false } })),
           catchError(() => EMPTY),
         ),
       ),

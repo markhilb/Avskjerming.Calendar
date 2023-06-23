@@ -1,12 +1,17 @@
 import { createSelector } from '@ngrx/store';
+import { AppState } from '../app.state';
+import { MetaData } from 'src/app/pages/calendar-page/calendar-page.component';
 import { CalendarEvent } from 'angular-calendar';
-import { selectAppState } from '../app.reducers';
-import { EmployeeDto } from 'src/app/models/event.model';
 
-export const selectEmployeeState = createSelector(selectAppState, (state) => state.employeeState);
+const employeeState = (state: AppState) => state.employeeState;
 
-export const selectEmployees = createSelector(selectEmployeeState, (state) => state.employees);
-export const selectAvailableEmployees = (event: CalendarEvent) =>
+export const selectEmployees = createSelector(employeeState, (state) => state.employees);
+
+export const selectEmployeesMap = createSelector(selectEmployees, (state) =>
+  Object.fromEntries(state?.map((e) => [e.id, e])),
+);
+
+export const selectAvailableEmployees = (event: CalendarEvent<MetaData>) =>
   createSelector(selectEmployees, (state) =>
-    state.filter((employee) => !event.meta.employees.some((_e: EmployeeDto) => _e.id === employee.id)),
+    state.filter((employee) => !event.meta?.employees.some((e) => e.id === employee.id)),
   );

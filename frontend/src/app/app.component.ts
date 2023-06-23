@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { AppState, isLoggedIn } from './store';
+import { AppState, loggedIn } from './store';
 
 @Component({
   selector: 'app-root',
@@ -9,6 +9,6 @@ import { AppState, isLoggedIn } from './store';
 })
 export class AppComponent {
   constructor(store: Store<AppState>) {
-    store.dispatch(isLoggedIn());
+    store.dispatch(loggedIn());
   }
 }

@@ -1,7 +1,6 @@
 #![deny(warnings)]
 #![deny(rust_2018_idioms)]
 
-use error::ErrorResponse;
 use routes::*;
 use utoipa::OpenApi;
 
@@ -34,7 +33,8 @@ pub mod settings;
     ),
     components(
         schemas(
-            ErrorResponse,
+            error::ApiError,
+            error::ErrorResponse,
             auth::Login,
             auth::ChangePassword,
             employee::Employee,

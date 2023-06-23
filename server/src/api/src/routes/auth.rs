@@ -59,7 +59,7 @@ pub async fn logout(session: Session) -> Result<Response<()>, ApiError> {
     get,
     path = "/logged_in",
     responses(
-        (status = 200, description = "whether the use is logged in", body = bool),
+        (status = 200, description = "whether the user is logged in", body = bool),
         (status = 500, description = "an internal server error occured"),
     )
 )]
@@ -87,7 +87,7 @@ pub async fn logged_in(session: Session) -> Result<Response<bool>, ApiError> {
         description = "old and new password",
     ),
     responses(
-        (status = 200, description = "password changed successfully"),
+        (status = 200, description = "whether the password changed successfully", body = bool),
         (status = 500, description = "an internal server error occured"),
     )
 )]
@@ -95,7 +95,7 @@ pub async fn logged_in(session: Session) -> Result<Response<bool>, ApiError> {
 pub async fn change_password(
     db: web::Data<PostgresAdapter>,
     body: web::Json<ChangePassword>,
-) -> Result<Response<()>, ApiError> {
+) -> Result<Response<bool>, ApiError> {
     let body = body.into_inner();
 
     db.change_password(body.old_password, body.new_password)
@@ -104,7 +104,7 @@ pub async fn change_password(
             event!(Level::ERROR, "failed to change password, err: {:?}", e);
             ApiError::InternalServerError
         })
-        .map(|_| Response::new(()))
+        .map(Response::new)
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize, ToSchema)]

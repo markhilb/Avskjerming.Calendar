@@ -1,8 +1,6 @@
-.docker/
+*
+!src/
+!package*.json
+!tsconfig*.json
+!angular.json
 !.docker/nginx.conf
-node_modules/
-.angular/
-dist/
-.prettierrc
-README.md
-

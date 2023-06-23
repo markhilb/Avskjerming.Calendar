@@ -1,12 +1,14 @@
-FROM node:16 AS builder
+FROM node:18 AS builder
+
+ARG APP_ENVIRONMENT
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY package*.json .
 RUN npm ci
 
 COPY . .
-RUN npm run build --prod
+RUN npm run build -- --configuration=${APP_ENVIRONMENT}
 
 FROM nginx:alpine
 COPY .docker/nginx.conf /etc/nginx/nginx.conf

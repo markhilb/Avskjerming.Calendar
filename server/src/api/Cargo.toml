@@ -10,6 +10,7 @@ chrono = { version = "0.4.26", features = ["serde"] }
 postgres = { path = "../postgres" }
 
 actix-web = "4.3.1"
+actix-cors = "0.6.4"
 serde = { version = "1.0.164", features = ["derive"] }
 tokio = { version = "1.28.2", features = ["macros"] }
 utoipa = { version = "3.3.0", features = ["actix_extras", "chrono", "repr"] }

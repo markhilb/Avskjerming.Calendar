@@ -1,6 +1,6 @@
-import { AuthenticationEffects } from './authentication/authentication.effects';
+import { AuthEffects } from './auth/auth.effects';
 import { EmployeeEffects } from './employee/employee.effects';
 import { EventEffects } from './event/event.effects';
 import { TeamEffects } from './team/team.effects';
 
-export const appEffects = [EventEffects, TeamEffects, EmployeeEffects, AuthenticationEffects];
+export const appEffects = [EventEffects, TeamEffects, EmployeeEffects, AuthEffects];

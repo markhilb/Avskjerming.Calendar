@@ -1,7 +1,7 @@
-import { EmployeeDto } from 'src/app/models/event.model';
+import { Employee } from 'src/generated/openapi';
 
 export interface EmployeeState {
-  employees: EmployeeDto[];
+  employees: Employee[];
 }
 
 export const initialEmployeeState: EmployeeState = {

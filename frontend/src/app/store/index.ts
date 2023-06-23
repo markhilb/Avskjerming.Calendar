@@ -5,4 +5,4 @@ export { AppState } from './app.state';
 export * from './event';
 export * from './team';
 export * from './employee';
-export * from './authentication';
+export * from './auth';

@@ -58,6 +58,42 @@
     },
     "query": "\nUPDATE events\nSET\n    title = $1,\n    details = $2,\n    period = TSTZRANGE ($3, $4, '[]'),\n    team_id = $5\nWHERE\n    event_id = $6\n            "
   },
+  "12a39e3c241318fa9f4d84f40ba8e3a1b7ee7359a12a015dbdf868a740a26c71": {
+    "describe": {
+      "columns": [
+        {
+          "name": "employee_id",
+          "ordinal": 0,
+          "type_info": "Int8"
+        },
+        {
+          "name": "name",
+          "ordinal": 1,
+          "type_info": "Text"
+        },
+        {
+          "name": "color",
+          "ordinal": 2,
+          "type_info": "Text"
+        },
+        {
+          "name": "disabled",
+          "ordinal": 3,
+          "type_info": "Bool"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": []
+      }
+    },
+    "query": "\nSELECT\n    employee_id,\n    \"name\",\n    color,\n    disabled\nFROM\n    employees\nWHERE\n    NOT disabled\n                     "
+  },
   "1f6eea35697bc7e42013c6807ef7845b8c0f5418687e1c1a306c0b028d4de885": {
     "describe": {
       "columns": [],
@@ -119,6 +155,48 @@
       }
     },
     "query": "\nUPDATE passwords\nSET\n    hash = SHA512($1)\nWHERE\n    hash = SHA512($2)\n            "
+  },
+  "86162fb6f1220c9b945a83190bc0bbec8b57b9674d1b568e5acb42f9c99faf73": {
+    "describe": {
+      "columns": [
+        {
+          "name": "team_id",
+          "ordinal": 0,
+          "type_info": "Int8"
+        },
+        {
+          "name": "name",
+          "ordinal": 1,
+          "type_info": "Text"
+        },
+        {
+          "name": "primary_color",
+          "ordinal": 2,
+          "type_info": "Text"
+        },
+        {
+          "name": "secondary_color",
+          "ordinal": 3,
+          "type_info": "Text"
+        },
+        {
+          "name": "disabled",
+          "ordinal": 4,
+          "type_info": "Bool"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": []
+      }
+    },
+    "query": "\nSELECT\n    team_id,\n    \"name\",\n    primary_color,\n    secondary_color,\n    disabled\nFROM\n    teams\nWHERE\n    NOT disabled\n                     "
   },
   "883198e2228bc95648ffb7eaa9ed50e54d0a5def6f47cb8e24ea303b15ebf390": {
     "describe": {
@@ -213,42 +291,6 @@
     },
     "query": "\nSELECT\n    e.event_id,\n    e.title,\n    e.details,\n    LOWER(e.period) AS \"start!\",\n    UPPER(e.period) AS \"end!\",\n    CASE\n        WHEN t.team_id IS NULL THEN NULL\n        ELSE JSONB_BUILD_OBJECT(\n            'team_id',\n            t.team_id,\n            'name',\n            t.name,\n            'primary_color',\n            t.primary_color,\n            'secondary_color',\n            t.secondary_color,\n            'disabled',\n            t.disabled\n        )::TEXT\n    END AS team,\n    COALESCE(\n        JSONB_AGG(\n            JSONB_BUILD_OBJECT(\n                'employee_id',\n                em.employee_id,\n                'name',\n                em.name,\n                'color',\n                em.color,\n                'disabled',\n                em.disabled\n            )\n        ) FILTER (\n            WHERE\n                em.employee_id IS NOT NULL\n        ),\n        '[]'\n    )::TEXT AS \"employees!\"\nFROM\n    events e\n    LEFT JOIN teams t ON e.team_id = t.team_id\n    LEFT JOIN events__employees ee ON e.event_id = ee.event_id\n    LEFT JOIN employees em ON ee.employee_id = em.employee_id\nWHERE\n    (\n        $1::TSTZRANGE IS NULL\n        OR $1 && e.period\n    )\nGROUP BY\n    e.event_id,\n    t.team_id\n            "
   },
-  "baece528f0a79788fca5283b9776bf7f5a38a74d1357708b0fe9e123199c9574": {
-    "describe": {
-      "columns": [
-        {
-          "name": "employee_id",
-          "ordinal": 0,
-          "type_info": "Int8"
-        },
-        {
-          "name": "name",
-          "ordinal": 1,
-          "type_info": "Text"
-        },
-        {
-          "name": "color",
-          "ordinal": 2,
-          "type_info": "Text"
-        },
-        {
-          "name": "disabled",
-          "ordinal": 3,
-          "type_info": "Bool"
-        }
-      ],
-      "nullable": [
-        false,
-        false,
-        false,
-        false
-      ],
-      "parameters": {
-        "Left": []
-      }
-    },
-    "query": "\nSELECT\n    employee_id,\n    \"name\",\n    color,\n    disabled\nFROM\n    employees\n                     "
-  },
   "c0ec5044be7e16b6806e7d565561fce8f7f41e30b0036241f047d9f5b0c11052": {
     "describe": {
       "columns": [
@@ -272,48 +314,6 @@
       }
     },
     "query": "\nINSERT INTO\n    events (title, details, period, team_id)\nVALUES\n    ($1, $2, TSTZRANGE ($3, $4, '[]'), $5)\nRETURNING\n    event_id\n            "
-  },
-  "d6fac7cc84ae4a33f0d16b4a2dfb8cea7c4e1f7c64af71320291bb25dc6cd37d": {
-    "describe": {
-      "columns": [
-        {
-          "name": "team_id",
-          "ordinal": 0,
-          "type_info": "Int8"
-        },
-        {
-          "name": "name",
-          "ordinal": 1,
-          "type_info": "Text"
-        },
-        {
-          "name": "primary_color",
-          "ordinal": 2,
-          "type_info": "Text"
-        },
-        {
-          "name": "secondary_color",
-          "ordinal": 3,
-          "type_info": "Text"
-        },
-        {
-          "name": "disabled",
-          "ordinal": 4,
-          "type_info": "Bool"
-        }
-      ],
-      "nullable": [
-        false,
-        false,
-        false,
-        false,
-        false
-      ],
-      "parameters": {
-        "Left": []
-      }
-    },
-    "query": "\nSELECT\n    team_id,\n    \"name\",\n    primary_color,\n    secondary_color,\n    disabled\nFROM\n    teams\n                     "
   },
   "fc47c18476db68758549cc5fd03f2d13f9dcb537ac93c26be3e0de5726935e31": {
     "describe": {

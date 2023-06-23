@@ -5,6 +5,8 @@ services:
     build:
       context: frontend
       dockerfile: .docker/Dockerfile
+      args:
+        - APP_ENVIRONMENT=td
     restart: always
     labels:
       - "traefik.enable=true"
@@ -17,7 +19,7 @@ services:
       dockerfile: .docker/api/Dockerfile
     restart: always
     environment:
-      - DATABASE_PASSWORD=$CALENDAR_DATABASE_PASSWORD
+      - PGPASSWORD=$CALENDAR_DATABASE_PASSWORD
       - SECRET_KEY=$CALENDAR_SECRET_KEY
       - APP_ENVIRONMENT=Td
     labels:

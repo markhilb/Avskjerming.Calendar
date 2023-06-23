@@ -14,6 +14,8 @@ SELECT
     disabled
 FROM
     employees
+WHERE
+    NOT disabled
                      "#
         )
         .fetch_all(&self.pool)

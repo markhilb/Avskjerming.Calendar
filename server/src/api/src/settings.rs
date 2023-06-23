@@ -28,7 +28,7 @@ pub enum LogLevel {
     Trace,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Deserialize, strum::Display, strum::EnumString)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize, strum::Display, strum::EnumString)]
 pub enum Environment {
     Test,
     Local,

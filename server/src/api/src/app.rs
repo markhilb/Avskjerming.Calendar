@@ -1,5 +1,6 @@
 use std::{io, net::TcpListener};
 
+use actix_cors::Cors;
 use actix_session::{storage::CookieSessionStore, SessionMiddleware};
 use actix_web::{
     cookie::Key,
@@ -28,7 +29,9 @@ impl App {
     pub async fn new(settings: &Settings) -> Self {
         let postgres = PostgresAdapter::new(&settings.postgres).await.unwrap();
 
-        if settings.environment != Environment::Test {
+        let environment = settings.environment;
+
+        if environment != Environment::Test {
             postgres.migrate().await.unwrap();
         }
 
@@ -41,6 +44,10 @@ impl App {
             actix_web::App::new()
                 .app_data(Data::new(postgres.clone()))
                 .wrap(Compress::default())
+                .wrap(Condition::new(
+                    matches!(environment, Environment::Local | Environment::Avskjerming),
+                    Cors::permissive(),
+                ))
                 .wrap(TracingLogger::default())
                 .wrap(Condition::new(
                     secret_key.is_some(),

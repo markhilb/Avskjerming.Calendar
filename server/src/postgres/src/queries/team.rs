@@ -15,6 +15,8 @@ SELECT
     disabled
 FROM
     teams
+WHERE
+    NOT disabled
                      "#
         )
         .fetch_all(&self.pool)

@@ -1,4 +1,4 @@
-log_level: Warning
+log_level: Warn
 api:
   ip: 0.0.0.0 
   port: 80

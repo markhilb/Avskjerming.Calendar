@@ -5,6 +5,9 @@ services:
     build:
       context: frontend
       dockerfile: .docker/Dockerfile
+      args:
+        - APP_ENVIRONMENT=avskjerming
+    restart: always
     ports:
       - 11000:80
 
@@ -12,8 +15,9 @@ services:
     build:
       context: server
       dockerfile: .docker/api/Dockerfile
+    restart: always
     environment:
-      - DATABASE_PASSWORD=$PGPASSWORD
+      - PGPASSWORD=$PGPASSWORD
       - APP_ENVIRONMENT=Avskjerming
     ports:
       - 5000:5000
@@ -23,7 +27,7 @@ services:
     shm_size: 1g
     restart: always
     environment:
-      - DATABASE_PASSWORD=$PGPASSWORD
+      - POSTGRES_PASSWORD=$PGPASSWORD
     volumes:
       - ./db:/var/lib/postgresql/data
     ports:

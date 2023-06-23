@@ -5,13 +5,16 @@
     {
       "files": ["*.ts"],
       "parserOptions": {
-        "project": ["tsconfig.json"],
-        "createDefaultProgram": true
+        "project": ["tsconfig.json"]
       },
+
       "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
         "plugin:@angular-eslint/recommended",
         "plugin:@angular-eslint/template/process-inline-templates",
-        "plugin:ngrx/recommended"
+        "plugin:ngrx/recommended",
+        "plugin:rxjs/recommended"
       ],
       "rules": {
         "@angular-eslint/directive-selector": [
@@ -30,20 +33,19 @@
             "style": "kebab-case"
           }
         ],
-        "ngrx/prefer-effect-callback-in-block-statement": 0,
-        "ngrx/no-typed-global-store": 0,
-        "ngrx/no-multiple-global-stores": 0,
-        "ngrx/avoid-mapping-selectors": 0,
-        "ngrx/no-store-subscription": 0,
-        "ngrx/no-dispatch-in-effects": 0,
-        "ngrx/avoid-dispatching-multiple-actions-sequentially": 0,
-        "rxjs/no-unsafe-first": 0
+        "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+        "@typescript-eslint/no-explicit-any": "off",
+        "ngrx/prefer-effect-callback-in-block-statement": "off",
+        "ngrx/avoid-dispatching-multiple-actions-sequentially": "off",
+        "ngrx/on-function-explicit-return-type": "off",
+        "ngrx/no-typed-global-store": "off",
+        "ngrx/prefix-selectors-with-select": "off"
       },
       "plugins": ["ngrx", "@angular-eslint", "@typescript-eslint"]
     },
     {
       "files": ["*.html"],
-      "extends": ["plugin:@angular-eslint/template/recommended"],
+      "extends": ["plugin:@angular-eslint/template/recommended", "plugin:@angular-eslint/template/accessibility"],
       "rules": {}
     }
   ]

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { EMPTY } from 'rxjs';
 import { catchError, exhaustMap, map, switchMap } from 'rxjs/operators';
-import { TeamService } from 'src/app/services/api/team.service';
+import { TeamService } from 'src/app/services/team.service';
 import * as A from './team.actions';
 
 @Injectable()
@@ -24,7 +24,7 @@ export class TeamEffects {
       ofType(A.createTeam),
       exhaustMap((action) =>
         this.teamService.createTeam(action.team).pipe(
-          map((id) => A.createTeamOk({ team: { ...action.team, id } })),
+          map((id) => A.createTeamOk({ team: { ...action.team, id, disabled: false } })),
           catchError(() => EMPTY),
         ),
       ),

@@ -76,65 +76,69 @@
     </div>
   </div>
 
-  <!-- <div class="row col-12 mt-5 pt-3 routes"> -->
-  <!--   <a routerLink="/passord" class="ml-auto btn btn-outline-secondary">Endre passord</a> -->
-  <!-- </div> -->
+  <div *ngIf="auth" class="row col-12 mt-5 pt-3 routes">
+    <a routerLink="/passord" class="ml-auto btn btn-outline-secondary">Endre passord</a>
+  </div>
 </div>
 
 <ng-template #addTeamModal let-close="close">
-  <div class="modal-header">
-    <button type="button" class="close" (click)="close()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <div>
-      Navn
-      <input class="form-control" type="text" [(ngModel)]="modalTeam.name" maxlength="255" />
+  <ng-container *ngIf="modalTeam as team">
+    <div class="modal-header">
+      <button type="button" class="close" (click)="close()">
+        <span aria-hidden="true">&times;</span>
+      </button>
     </div>
-    <div class="mt-4">
-      Hoved farge
-      <input class="form-control" type="color" [(ngModel)]="modalTeam.primaryColor" />
+    <div class="modal-body">
+      <div>
+        Navn
+        <input id="teamName" class="form-control" type="text" [(ngModel)]="team.name" maxlength="255" />
+      </div>
+      <div class="mt-4">
+        Hoved farge
+        <input class="form-control" type="color" [(ngModel)]="team.primaryColor" />
+      </div>
+      <div class="mt-4">
+        Andre farge
+        <input class="form-control" type="color" [(ngModel)]="team.secondaryColor" />
+      </div>
     </div>
-    <div class="mt-4">
-      Andre farge
-      <input class="form-control" type="color" [(ngModel)]="modalTeam.secondaryColor" />
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-outline-success ms-auto"
+        (click)="team.id === 0 ? confirmAddTeam() : confirmUpdateTeam()"
+      >
+        Lagre
+      </button>
     </div>
-  </div>
-  <div class="modal-footer">
-    <button
-      type="button"
-      class="btn btn-outline-success ms-auto"
-      (click)="modalTeam.id === 0 ? confirmAddTeam() : confirmUpdateTeam()"
-    >
-      Lagre
-    </button>
-  </div>
+  </ng-container>
 </ng-template>
 
 <ng-template #addEmployeeModal let-close="close">
-  <div class="modal-header">
-    <button type="button" class="close" (click)="close()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <div>
-      Navn
-      <input class="form-control" type="text" [(ngModel)]="modalEmployee.name" maxlength="255" />
+  <ng-container *ngIf="modalEmployee as employee">
+    <div class="modal-header">
+      <button type="button" class="close" (click)="close()">
+        <span aria-hidden="true">&times;</span>
+      </button>
     </div>
-    <div class="mt-4">
-      Farge
-      <input class="form-control" type="color" [(ngModel)]="modalEmployee.color" />
+    <div class="modal-body">
+      <div>
+        Navn
+        <input id="employeeName" class="form-control" type="text" [(ngModel)]="employee.name" maxlength="255" />
+      </div>
+      <div class="mt-4">
+        Farge
+        <input class="form-control" type="color" [(ngModel)]="employee.color" />
+      </div>
     </div>
-  </div>
-  <div class="modal-footer">
-    <button
-      type="button"
-      class="btn btn-outline-success ms-auto"
-      (click)="modalEmployee.id === 0 ? confirmAddEmployee() : confirmUpdateEmployee()"
-    >
-      Lagre
-    </button>
-  </div>
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-outline-success ms-auto"
+        (click)="employee.id === 0 ? confirmAddEmployee() : confirmUpdateEmployee()"
+      >
+        Lagre
+      </button>
+    </div>
+  </ng-container>
 </ng-template>
