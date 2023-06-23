@@ -55,10 +55,8 @@ impl Settings {
             let pg_password = std::env::var("PGPASSWORD").expect("failed to parse PGPASSWORD");
             builder = builder.set_override("postgres.password", pg_password)?;
         } else if environment == Environment::Td {
-            let secret_key =
-                std::env::var("CALENDAR_SECRET_KEY").expect("failed to parse CALENDAR_SECRET_KEY");
-            let pg_password = std::env::var("CALENDAR_DATABASE_PASSWORD")
-                .expect("failed to parse CALENDAR_DATABASE_PASSWORD");
+            let secret_key = std::env::var("SECRET_KEY").expect("failed to parse SECRET_KEY");
+            let pg_password = std::env::var("PGPASSWORD").expect("failed to parse PGPASSWORD");
 
             builder = builder.set_override("api.secret_key", secret_key)?;
             builder = builder.set_override("postgres.password", pg_password)?;

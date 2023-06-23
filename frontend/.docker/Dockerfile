@@ -4,7 +4,7 @@ ARG APP_ENVIRONMENT
 
 WORKDIR /app
 
-COPY package*.json .
+COPY package*.json ./
 RUN npm ci
 
 COPY . .

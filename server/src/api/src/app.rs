@@ -41,13 +41,22 @@ impl App {
         let secret_key = settings.api.secret_key.clone();
 
         let server = HttpServer::new(move || {
+            let mut cors = Cors::default()
+                .allow_any_header()
+                .allow_any_method()
+                .supports_credentials();
+
+            cors = match environment {
+                Environment::Td => cors.allowed_origin("https://calendar.hilbertsen.com"),
+                Environment::Test | Environment::Local | Environment::Avskjerming => {
+                    cors.allow_any_origin()
+                }
+            };
+
             actix_web::App::new()
                 .app_data(Data::new(postgres.clone()))
                 .wrap(Compress::default())
-                .wrap(Condition::new(
-                    matches!(environment, Environment::Local | Environment::Avskjerming),
-                    Cors::permissive(),
-                ))
+                .wrap(cors)
                 .wrap(TracingLogger::default())
                 .wrap(Condition::new(
                     secret_key.is_some(),
